@@ -1,0 +1,45 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=P@ssw0rd
+      - MARIADB_DATABASE=infinitas
+    ports:
+      - "3307:3306"  # เปลี่ยนเป็นพอร์ตอื่นหากมีการใช้งาน 3306 แล้ว
+    networks:
+      - testredis-network
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6381:6379"  # เปลี่ยนเป็นพอร์ตอื่นหากมีการใช้งาน 6380 แล้ว
+    networks:
+      - testredis-network
+
+  influxdb:
+    image: influxdb
+    container_name: influxdb
+    networks:
+      - testredis-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    networks:
+      - testredis-network
+
+  k6:
+    image: loadimpact/k6
+    container_name: k6
+    volumes:
+      - ./scripts:/scripts
+    networks:
+      - testredis-network
+    command: run /scripts/test_with_redis.js
+
+networks:
+  testredis-network:
+    driver: bridge
