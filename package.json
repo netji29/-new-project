@@ -1,16 +1,24 @@
 {
-  "name": "testredis",
+  "name": "k6-performance-tests",
   "version": "1.0.0",
-  "description": "",
-  "main": "test_with_redis.js",
+  "main": "src/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
-    "redis": "^4.6.15"
+    "amqplib": "^0.8.0",
+    "express": "^4.17.1",
+    "ioredis": "^4.17.3",
+    "mysql2": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/express": "^4.17.21",
+    "@types/ioredis": "^4.28.10",
+    "@types/node": "^22.7.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.6.3"
   }
 }

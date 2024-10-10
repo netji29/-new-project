@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                       // เลือกเป็น ES6 หรือ ESNext ขึ้นอยู่กับการใช้
+    "module": "commonjs",                   // ใช้โมดูลแบบ CommonJS
+    "esModuleInterop": true,                // เปิดการใช้งาน interop กับ ES6 modules
+    "skipLibCheck": true,                   // ข้ามการตรวจสอบประเภทของไลบรารี (เพื่อเพิ่มความเร็ว)
+    "outDir": "./dist",                     // ระบุที่เก็บไฟล์คอมไพล์
+    "rootDir": "./src",                     // ระบุที่เก็บไฟล์ต้นฉบับ
+    "strict": true,                         // เปิดการตรวจสอบที่เข้มงวด
+    "noImplicitAny": true,                  // ป้องกันการใช้งาน `any`
+    "forceConsistentCasingInFileNames": true // ตรวจสอบความสอดคล้องของชื่อไฟล์
+  },
+  "include": ["src/**/*.ts"],                 // รวมไฟล์ TypeScript ในโฟลเดอร์ `src`
+  "exclude": ["node_modules", "dist"]         // ไม่รวม `node_modules` และ `dist`
+}
