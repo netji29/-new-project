@@ -1,8 +1,17 @@
-# เลือกใช้ Base Image ที่ต้องการ (ใช้ grafana/k6 ในที่นี้)
-FROM grafana/k6
+# ใช้ base image ของ Node.js
+FROM node:16
 
-# คัดลอกไฟล์ที่จำเป็นไปยัง Docker Container
-COPY k6-tests/test_with_redis.js /k6/scripts/test_with_redis.js
-COPY k6-tests/test_without_redis.js /k6/scripts/test_without_redis.js
-COPY k6-tests/test_with_rabbitmq.js /k6/scripts/test_with_rabbitmq.js
-COPY k6-tests/test_with_redis_and_rabbitmq.js /k6/scripts/test_with_redis_and_rabbitmq.js
+# ตั้งค่า working directory ภายใน container
+WORKDIR /app
+
+# คัดลอก package.json และ package-lock.json
+COPY package*.json ./
+
+# ติดตั้ง dependencies
+RUN npm install
+
+# คัดลอกไฟล์แอปพลิเคชันทั้งหมด
+COPY . .
+
+# คำสั่งที่ใช้รันแอปพลิเคชัน
+CMD ["npm", "start"]

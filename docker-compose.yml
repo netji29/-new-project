@@ -1,33 +1,57 @@
 version: '3'
+
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.app  # ใช้ Dockerfile สำหรับ k6
+    volumes:
+      - ./k6-tests:/k6/scripts:delegated  # เพิ่ม delegated
+    command: k6 run /k6/scripts/test_with_redis.js
     depends_on:
       - redis
       - rabbitmq
       - mysql
-    environment:
-      - REDIS_HOST=redis
-      - MYSQL_HOST=mysql
-      - RABBITMQ_HOST=rabbitmq
+
+  node-app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # ใช้ Dockerfile สำหรับ Node.js
     ports:
       - "3000:3000"
-
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-
-  rabbitmq:
-    image: "rabbitmq:management"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    volumes:
+      - .:/app:delegated  # เพิ่ม delegated
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - redis
+      - mysql
+      - rabbitmq
 
   mysql:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test_db
+      MYSQL_ROOT_PASSWORD: Str0ngP@ssw0rd  # ใส่รหัส
     ports:
       - "3306:3306"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql  # ชื่อของ MySQL container
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql

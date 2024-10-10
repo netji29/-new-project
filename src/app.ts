@@ -6,7 +6,7 @@ import db from './db';
 const app = express();
 const port = 3000;
 
-// ตรวจสอบการเชื่อมต่อ Redis
+// เชื่อมต่อ Redis
 redis.get('some-key', (err, result) => {
   if (err) {
     console.error('Redis error:', err);
@@ -16,18 +16,28 @@ redis.get('some-key', (err, result) => {
 });
 
 // เชื่อมต่อ RabbitMQ
-connectRabbitMQ().then(channel => {
-  console.log('RabbitMQ channel created');
-});
+async function connectToRabbitMQ() {
+  try {
+    const channel = await connectRabbitMQ();
+    console.log('RabbitMQ channel created');
+  } catch (err) {
+    console.error('Error connecting to RabbitMQ:', err);
+  }
+}
+
+connectToRabbitMQ();
 
 // เชื่อมต่อ MySQL
-db.query('SELECT * FROM test_table', (err, results) => {
-  if (err) {
-    console.error('MySQL query error:', err);
-  } else {
+async function connectToDB() {
+  try {
+    const results = await db.query('SELECT * FROM test_table');
     console.log('MySQL query results:', results);
+  } catch (err) {
+    console.error('MySQL query error:', err);
   }
-});
+}
+
+connectToDB();
 
 app.listen(port, () => {
   console.log(`App running on http://localhost:${port}`);
